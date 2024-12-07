@@ -285,3 +285,14 @@ bool achordion_chord(uint16_t tap_hold_keycode,
   // Otherwise, follow the opposite hands rule.
   return achordion_opposite_hands(tap_hold_record, other_record);
 }
+
+uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
+    switch (tap_hold_keycode) {
+        // the pointer layer needs to kick in for the snipe sensitivity.
+    case _L_PTR(KC_Z):
+    case _L_PTR(KC_SLSH):
+        return 0;
+    }
+
+    return 800;
+}
