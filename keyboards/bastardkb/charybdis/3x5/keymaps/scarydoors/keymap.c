@@ -15,6 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "features/achordion.h"
+#include "features/layer_lock.h"
 
 #include QMK_KEYBOARD_H
 
@@ -30,6 +31,10 @@ enum charybdis_keymap_layers {
     LAYER_POINTER,
     LAYER_NUMERAL,
     LAYER_SYMBOLS,
+};
+
+enum custom_keycodes {
+  LLOCK = SAFE_RANGE,
 };
 
 // Automatically enable sniping-mode on the pointer layer.
@@ -114,7 +119,7 @@ static uint16_t auto_pointer_layer_timer = 0;
 #define LAYOUT_LAYER_POINTER                                                                  \
     QK_BOOT,  EE_CLR, XXXXXXX, DPI_MOD, S_D_MOD, S_D_MOD, DPI_MOD, XXXXXXX,  EE_CLR, QK_BOOT, \
     ______________HOME_ROW_AGCS_L______________, ______________HOME_ROW_AGCS_R______________, \
-    _______, DRGSCRL, SNIPING, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, SNIPING, DRGSCRL, _______, \
+    _______, DRGSCRL, SNIPING,   LLOCK, XXXXXXX, XXXXXXX,   LLOCK, SNIPING, DRGSCRL, _______, \
                       KC_BTN2, KC_BTN1, KC_BTN3, KC_BTN3, KC_BTN1
 
 /**
@@ -262,6 +267,8 @@ void rgb_matrix_update_pwm_buffers(void);
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     if (!process_achordion(keycode, record)) { return false; }
+
+    if (!process_layer_lock(keycode, record, LLOCK)) { return false; }
 
     return true;
 }
