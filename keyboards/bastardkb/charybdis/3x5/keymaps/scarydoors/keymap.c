@@ -33,6 +33,12 @@ enum charybdis_keymap_layers {
     LAYER_SYMBOLS,
 };
 
+const uint16_t PROGMEM equal_combo[] = {KC_LABK, KC_RABK, COMBO_END};
+
+combo_t key_combos[] = {
+  COMBO(equal_combo, KC_EQL),
+};
+
 enum custom_keycodes {
   LLOCK = SAFE_RANGE,
 };
@@ -274,25 +280,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     return true;
 }
 
-bool achordion_chord(uint16_t tap_hold_keycode,
-                     keyrecord_t* tap_hold_record,
-                     uint16_t other_keycode,
-                     keyrecord_t* other_record) {
-  switch (tap_hold_keycode) {
-  case _L_PTR(KC_Z):
-  case _L_PTR(KC_SLSH):
-        return true;
-  }
-
-  if (tap_hold_record->event.key.row == 3 || tap_hold_record->event.key.row == 7) { return true; }
-
-  // Otherwise, follow the opposite hands rule.
-  return achordion_opposite_hands(tap_hold_record, other_record);
-}
-
 uint16_t achordion_timeout(uint16_t tap_hold_keycode) {
     switch (tap_hold_keycode) {
         // the pointer layer needs to kick in for the snipe sensitivity.
+    case ESC_MED:
+    case SPC_NAV:
+    case TAB_FUN:
+    case ENT_SYM:
+    case BSP_NUM:
     case _L_PTR(KC_Z):
     case _L_PTR(KC_SLSH):
         return 0;
