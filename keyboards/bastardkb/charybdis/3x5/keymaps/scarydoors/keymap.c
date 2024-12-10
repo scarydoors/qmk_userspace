@@ -164,7 +164,7 @@ static uint16_t auto_pointer_layer_timer = 0;
  * `KC_RPRN`.
  */
 #define LAYOUT_LAYER_SYMBOLS                                                                  \
-    XXXXXXX, KC_LPRN, KC_RPRN, KC_COMM, KC_AMPR, XXXXXXX, CW_TOGG, KC_LABK, KC_RABK, XXXXXXX, \
+    XXXXXXX, KC_LPRN, KC_RPRN, KC_COMM, KC_AMPR, XXXXXXX, XXXXXXX, KC_LABK, KC_RABK, XXXXXXX, \
     KC_EXLM, KC_CIRC, KC_PERC,  KC_DLR,  KC_EQL, MACHASH, KC_COLN, KC_LBRC, KC_RBRC,  KC_GRV, \
     KC_TILD, KC_BSLS,   KC_AT, KC_HASH, KC_PIPE, KC_PLUS, KC_ASTR, KC_LCBR, KC_RCBR, KC_SLSH, \
                       KC_UNDS, KC_SCLN, KC_MINS, XXXXXXX, _______
@@ -276,6 +276,14 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     if (!process_achordion(keycode, record)) { return false; }
 
     if (!process_layer_lock(keycode, record, LLOCK)) { return false; }
+
+    const uint8_t layer = read_source_layers_cache(record->event.key);
+
+    if (layer == LAYER_SYMBOLS && record->event.pressed) {
+        // Clear any weak mods left over from the previous key.
+        clear_weak_mods();
+        send_keyboard_report();
+    }
 
     return true;
 }
